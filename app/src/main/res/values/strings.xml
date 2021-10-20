@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">EstoHoli</string>
+    <string name="select_date">Select Start date</string>
+    <string name="baseUrl">https://wozmx9dh26.execute-api.eu-west-1.amazonaws.com/api/holidays</string>
+    <string name="errorTitle">"Error occured "</string>
+    <string name="closeString">Close</string>
+    <string name="unKnownError">Unknown Error</string>
+    <string name="no_event">No Event</string>
+    <string name="FirstDay">First Day</string>
 </resources>

@@ -13,6 +13,7 @@ import com.beardedhen.androidbootstrap.TypefaceProvider
 import com.richard.estoholi.R
 import com.richard.estoholi.ui.helpers.Utils
 import com.richard.estoholi.ui.holidayList.adapter.HoldayListAdapter
+import io.realm.internal.Util
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import java.text.SimpleDateFormat
@@ -50,6 +51,7 @@ class HolidaytList : AppCompatActivity(), HoldayContract.UiContract, View.OnClic
         //Setup firstTIme to show todays date
        startDate = Utils.getTodaysDate()
 
+        updateDateUI(startDate, Utils.getTheNext30Days(startDate))
 
         //Listerners
         btnRightArrow.setOnClickListener(this)

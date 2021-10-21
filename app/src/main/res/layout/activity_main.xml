@@ -3,92 +3,118 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/gradiant_gray"
     android:layout_height="match_parent"
     tools:context=".ui.holidayList.HolidaytList">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:orientation="vertical"
-       android:layout_margin="@dimen/sisteen"
-       android:layout_height="match_parent">
-
-
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content">
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnLeftArrow"
-            app:bootstrapText="{fa_angle_left}"
-            app:bootstrapBrand="success"
-            app:bootstrapSize="xl"
-            android:layout_weight = "0"
-            app:buttonMode="regular"
-            app:showOutline="false"
-            app:roundedCorners="true"
-            />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_weight = "1"
-            android:layout_height="wrap_content">
-           <com.beardedhen.androidbootstrap.BootstrapDropDown
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_centerHorizontal="true"
-               android:id="@+id/firstDaySelect"
-               app:bootstrapText="@string/FirstDay"
-               app:bootstrapBrand="regular"
-               android:layout_marginHorizontal="@dimen/sisteen"
-               app:roundedCorners="true"
-               app:bootstrapSize="xl"
-               app:dropdownResource="@array/bootstrap_dropdown_example_data"
-               app:bootstrapExpandDirection="down"/>
+            android:layout_margin="@dimen/sisteen"
+            android:layout_height="match_parent">
 
-           <com.beardedhen.androidbootstrap.BootstrapAlert
-               android:layout_width="match_parent"
-               android:layout_marginTop="5dp"
-               android:layout_marginHorizontal="@dimen/sisteen"
-               android:layout_height="wrap_content">
 
-              <com.beardedhen.androidbootstrap.AwesomeTextView
-                  android:layout_width="wrap_content"
-                  app:bootstrapBrand="primary"
-                  android:textSize="16sp"
-                  android:id="@+id/dateHolder"
-                  android:layout_centerHorizontal="true"
-                  android:text="12-03-2013 - 01-12-2014"
-                  android:layout_height="wrap_content"/>
-           </com.beardedhen.androidbootstrap.BootstrapAlert>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/topSearch"
+                android:paddingBottom="10dp"
+                android:layout_height="wrap_content">
+
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btnLeftArrow"
+                    app:bootstrapText="{fa_angle_left}"
+                    app:bootstrapBrand="danger"
+                    app:bootstrapSize="xl"
+                    android:layout_weight = "0"
+                    app:buttonMode="regular"
+                    app:showOutline="false"
+                    app:roundedCorners="true"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight = "1"
+                    android:layout_height="wrap_content">
+                    <com.beardedhen.androidbootstrap.BootstrapDropDown
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/firstDaySelect"
+                        app:bootstrapText="@string/FirstDay"
+                        app:bootstrapBrand="secondary"
+                        android:layout_marginHorizontal="@dimen/sisteen"
+                        app:roundedCorners="true"
+                        app:bootstrapSize="xl"
+                        app:dropdownResource="@array/bootstrap_dropdown_example_data"
+                        app:bootstrapExpandDirection="down"/>
+
+                    <com.beardedhen.androidbootstrap.BootstrapAlert
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="5dp"
+                        app:bootstrapBrand="danger"
+                        android:layout_marginHorizontal="@dimen/sisteen"
+                        android:layout_height="wrap_content">
+
+                        <com.beardedhen.androidbootstrap.AwesomeTextView
+                            android:layout_width="wrap_content"
+                            app:bootstrapBrand="primary"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:id="@+id/dateHolder"
+                            android:layout_centerHorizontal="true"
+                            android:text="12-03-2013 - 01-12-2014"
+                            android:layout_height="wrap_content"/>
+                    </com.beardedhen.androidbootstrap.BootstrapAlert>
+
+                </LinearLayout>
+
+
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btnRightArrow"
+                    android:layout_weight = "0"
+                    app:bootstrapText="{fa_angle_right}"
+                    android:layout_alignParentRight="true"
+                    app:bootstrapBrand="danger"
+                    app:bootstrapSize="xl"
+                    app:buttonMode="regular"
+                    app:showOutline="false"
+                    app:roundedCorners="true"
+                    />
+            </LinearLayout>
+
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/recyclerView"
+                android:layout_height="wrap_content"/>
+
 
         </LinearLayout>
 
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/showMenu"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/btnRightArrow"
-            android:layout_weight = "0"
-            app:bootstrapText="{fa_angle_right}"
-            android:layout_alignParentRight="true"
-            app:bootstrapBrand="success"
-            app:bootstrapSize="xl"
-            app:buttonMode="regular"
-            app:showOutline="false"
-            app:roundedCorners="true"
-            />
-     </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:visibility="gone"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:src="@android:drawable/ic_menu_search"
+            android:contentDescription="@string/filter"
+            android:layout_margin="16dp" />
+    </FrameLayout>
 
 
 
-      <androidx.recyclerview.widget.RecyclerView
-          android:layout_width="match_parent"
-          android:id="@+id/recyclerView"
-          android:layout_height="wrap_content"/>
 
-   </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

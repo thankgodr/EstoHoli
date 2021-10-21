@@ -2,60 +2,105 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="5dp"
-    app:cardCornerRadius="@dimen/cardview_default_radius"
+    android:layout_marginTop="5dp"
+    app:cardCornerRadius="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:orientation="vertical"
-       android:layout_margin="@dimen/sisteen"
-       android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
-       <com.beardedhen.androidbootstrap.BootstrapLabel
-           android:layout_width="wrap_content"
-           android:text="test"
-           app:bootstrapBrand="primary"
-           app:bootstrapHeading="h4"
-           android:layout_gravity="center_horizontal"
-           android:textStyle="bold"
-           android:layout_height="wrap_content"
-           android:id="@+id/holdayDate"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/divHolder"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:padding="5dp"
+                android:background="@android:color/holo_blue_light"
+                android:layout_height="match_parent">
+                <com.beardedhen.androidbootstrap.BootstrapLabel
+                    android:layout_width="wrap_content"
+                    android:text="test"
+                    app:bootstrapBrand="danger"
+                    app:bootstrapHeading="h5"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/holdayDate"/>
 
 
-       <androidx.recyclerview.widget.RecyclerView
-           android:layout_width="match_parent"
-           android:id="@+id/singleHolday"
-           android:layout_marginLeft="@dimen/sisteen"
-           android:layout_height="wrap_content"/>
-
-
-
-       <com.beardedhen.androidbootstrap.BootstrapWell
-           android:layout_width="wrap_content"
-           app:bootstrapSize="lg"
-           android:layout_gravity="center_horizontal"
-           app:bootstrapBrand="danger"
-           android:layout_marginTop="@dimen/sisteen"
-           android:id="@+id/noevent"
-           android:visibility="gone"
-           android:layout_height="wrap_content">
-
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_margin="@dimen/sisteen"
-               android:textStyle="bold"
-               android:textSize="24sp"
-               android:text="@string/no_event"
-               />
-
-       </com.beardedhen.androidbootstrap.BootstrapWell>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="DayName"
+                    android:id="@+id/dayName"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/white"
+                    android:gravity="bottom"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"/>
 
 
 
+            </RelativeLayout>
 
-   </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/sisteen"
+                android:layout_height="wrap_content">
+
+
+
+
+
+                <com.beardedhen.androidbootstrap.BootstrapWell
+                    android:layout_width="wrap_content"
+                    app:bootstrapSize="sm"
+                    android:layout_gravity="center_horizontal"
+                    app:bootstrapBrand="danger"
+                    android:layout_marginTop="@dimen/sisteen"
+                    android:id="@+id/noevent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/sisteen"
+                        android:textStyle="bold"
+                        android:id="@+id/noeventText"
+                        android:textSize="16sp"
+                        android:text="@string/no_event"
+                        />
+
+                </com.beardedhen.androidbootstrap.BootstrapWell>
+
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/singleHolday"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
 
 
 

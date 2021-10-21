@@ -14,16 +14,16 @@
 
         <com.beardedhen.androidbootstrap.BootstrapWell
             android:layout_width="match_parent"
-            app:bootstrapSize="xl"
-            android:background="@color/bootstrap_brand_danger"
-            android:minHeight="100dp"
+            app:bootstrapSize="md"
             android:layout_height="match_parent">
             <com.beardedhen.androidbootstrap.AwesomeTextView
                 android:layout_width="wrap_content"
                 android:textColor="@color/white"
                 android:text="Hello World"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:id="@+id/name"
-                android:textSize="32sp"
+                android:textSize="16sp"
                 android:layout_height="wrap_content"/>
         </com.beardedhen.androidbootstrap.BootstrapWell>
 

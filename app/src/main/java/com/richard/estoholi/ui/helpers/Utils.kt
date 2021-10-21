@@ -1,6 +1,8 @@
 package com.richard.estoholi.ui.helpers
 
+import android.util.Log.d
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 class Utils {
@@ -50,12 +52,11 @@ class Utils {
             val format = SimpleDateFormat("yyyy-MM-dd")
             val today = Calendar.getInstance()
             today.time = format.parse(startDate)
-            val dayOfWeek = today[Calendar.DAY_OF_WEEK]
-            var daysUntilNextWeekOfDay = weekOfDay - dayOfWeek
-            if (daysUntilNextWeekOfDay == 0) daysUntilNextWeekOfDay = 7
-            val nextWeekOfDay = today.clone() as Calendar
-            nextWeekOfDay.add(Calendar.DAY_OF_WEEK, daysUntilNextWeekOfDay)
-            return format.format(nextWeekOfDay.time)
+             while (today.get(Calendar.DAY_OF_WEEK) != weekOfDay+1) {
+                 today.add(Calendar.DATE, 1);
+                 d("okh", today.time.toString())
+             }
+             return format.format(today.time)
         }
 
 
@@ -66,6 +67,12 @@ class Utils {
              return c.time
         }
 
+        fun getDayIt(key: String):String {
+            val format = SimpleDateFormat("yyyy-MM-dd")
+            val date = format.parse(key)
+            val dayFormater = SimpleDateFormat("EEEE")
+            return dayFormater.format(date)
+        }
 
 
     }

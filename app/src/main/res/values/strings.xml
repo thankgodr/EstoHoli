@@ -7,4 +7,6 @@
     <string name="unKnownError">Unknown Error</string>
     <string name="no_event">No Event</string>
     <string name="FirstDay">First Day</string>
+    <string name="totalHoldayis">There are $$ holdays</string>
+    <string name="filter">Filter</string>
 </resources>

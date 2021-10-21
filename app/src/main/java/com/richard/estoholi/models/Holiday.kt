@@ -1,3 +1,5 @@
 package com.richard.estoholi.models
 
-data class Holiday(var name : String? = null, var type : String? = null)
+import io.realm.RealmObject
+
+open class Holiday(var name : String? = null, var type : String? = null) : RealmObject()

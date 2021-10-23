@@ -3,12 +3,25 @@ package com.richard.estoholi.ui.helpers
 import android.util.Log.d
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class Utils {
     companion object{
+        fun localDateTOString(date : LocalDate): String {
+            return getDateTimeFormat().format(date)
+        }
+
+        fun getDateTimeFormat(): DateTimeFormatter {
+            return DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+        }
+
+        fun getSimpleDateFormat(): SimpleDateFormat {
+            return SimpleDateFormat("yyyy-MM-dd")
+        }
+
         fun getNextDate(startDate: String): String {
-            val format = SimpleDateFormat("yyyy-MM-dd")
+            val format = getSimpleDateFormat()
             val c = Calendar.getInstance()
             c.time = format.parse(startDate)
             c.add(Calendar.DATE, 30)
@@ -17,7 +30,7 @@ class Utils {
         }
 
         fun getNextDate(startDate: String, days: Int): String {
-            val format = SimpleDateFormat("yyyy-MM-dd")
+            val format = getSimpleDateFormat()
             val c = Calendar.getInstance()
             c.time = format.parse(startDate)
             c.add(Calendar.DATE, days)
@@ -42,14 +55,14 @@ class Utils {
         }
 
         fun getTodaysDate(): String {
-            val format = SimpleDateFormat("yyyy-MM-dd")
+            val format = getSimpleDateFormat()
             val date = Date()
            return  format.format(date)
         }
 
 
          fun getNextweekOfDay(weekOfDay: Int, startDate: String): String {
-            val format = SimpleDateFormat("yyyy-MM-dd")
+            val format = getSimpleDateFormat()
             val today = Calendar.getInstance()
             today.time = format.parse(startDate)
              while (today.get(Calendar.DAY_OF_WEEK) != weekOfDay+1) {
@@ -68,10 +81,15 @@ class Utils {
         }
 
         fun getDayIt(key: String):String {
-            val format = SimpleDateFormat("yyyy-MM-dd")
+            val format = getSimpleDateFormat()
             val date = format.parse(key)
             val dayFormater = SimpleDateFormat("EEEE")
             return dayFormater.format(date)
+        }
+
+        fun getHumanShort(dayOfMonth: LocalDate): String {
+                val dtf =  DateTimeFormatter.ofPattern("EEE dd MMM")
+                return dtf.format(dayOfMonth)
         }
 
 

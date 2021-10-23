@@ -1,17 +1,17 @@
 package com.richard.estoholi.ui.calenderView
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.annotation.ColorRes
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -20,10 +20,14 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.utils.next
 import com.kizitonwose.calendarview.utils.previous
 import com.richard.estoholi.R
+import com.richard.estoholi.models.Holiday
+import com.richard.estoholi.ui.calenderView.adapters.CalenderHolidayAdapter
+import com.richard.estoholi.ui.helpers.CollapserAnim
+import com.richard.estoholi.ui.helpers.Utils
 import com.richard.estoholi.ui.holidayList.HoldayContract
-import com.richard.estoholi.ui.holidayList.adapter.HoldayListAdapter
-import com.richard.estoholi.ui.holidayList.adapter.SingleHolidayAdapter
 import kotlinx.android.synthetic.main.calenda_view.*
+import kotlinx.android.synthetic.main.calendar_day.*
+import org.jetbrains.anko.alert
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -36,13 +40,30 @@ import java.util.*
 
 class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
 
+    lateinit var presenter : CalenderPresenter
+    lateinit var progresBar: ProgressDialog
+    var oldCalendayView : DayViewContainer? = null
+
+    private var selectedDate: LocalDate? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calenda_view)
 
+        supportActionBar!!.hide()
+        attachPresenter()
+        UiSetup()
+
+    }
+
+    private fun UiSetup(){
+        progresBar = ProgressDialog(this)
         maincalenda.dayBinder = object : DayBinder<DayViewContainer>{
             override fun bind(container: DayViewContainer, day: CalendarDay) {
+
+                var dateString = Utils.localDateTOString(day.date)
+
                 container.numHolidays.text = day.date.dayOfMonth.toString()
                 if (day.owner == DayOwner.THIS_MONTH) {
                     container.numHolidays.setTextColor(Color.WHITE)
@@ -54,12 +75,17 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
             override fun create(view: View): DayViewContainer {
                 return DayViewContainer(view)
             }
+
+
         }
 
         maincalenda.monthScrollListener = { month ->
             val title = "${DateTimeFormatter.ofPattern("MMMM").format(month.yearMonth)} ${month.yearMonth.year}"
             exFiveMonthYearText.text = title
+            presenter.getHolidays("${month.yearMonth.year}-${month.month}-01")
         }
+
+
 
         maincalenda.monthHeaderBinder =  object : MonthHeaderFooterBinder<MonthViewContainer> {
             override fun create(view: View) = MonthViewContainer(view)
@@ -98,6 +124,10 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
         maincalenda.scrollToMonth(currentMonth)
     }
 
+    private fun attachPresenter() {
+        presenter = CalenderPresenter(this)
+    }
+
     fun daysOfWeekFromLocale(): Array<DayOfWeek> {
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
         var daysOfWeek = DayOfWeek.values()
@@ -111,8 +141,8 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
         return daysOfWeek
     }
 
-    override fun returnedHoliday(adapter: SingleHolidayAdapter) {
-
+    override fun returnedHoliday(map: Map<String, List<Holiday>>) {
+        updateDateBinderWithHolidays(map)
     }
 
     override fun getContext(): Context {
@@ -120,12 +150,89 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
     }
 
     override fun showPregress() {
-        TODO("Not yet implemented")
+        if(progresBar == null){
+            progresBar = ProgressDialog(this)
+        }
+        progresBar.setTitle("Loading...")
+        progresBar.show()
     }
 
     override fun hideProgress() {
-        TODO("Not yet implemented")
+        progresBar.hide()
     }
 
+    override fun showError(err: String) {
+        alert{
+            isCancelable = false
+            title = this.ctx.getString(R.string.errorTitle)
+            message = err
+            positiveButton(this.ctx.getString(R.string.closeString), {
+                it.cancel()
+            })
+        }.show()
+    }
+
+
+    private fun updateDateBinderWithHolidays(data : Map<String, List<Holiday>>){
+        maincalenda.dayBinder = object : DayBinder<DayViewContainer>{
+            override fun bind(container: DayViewContainer, day: CalendarDay) {
+
+
+
+                var dateString = Utils.localDateTOString(day.date)
+
+                if(!data.get(dateString).isNullOrEmpty()){
+                    if(data.get(dateString)!!.size == 1){
+                        container.holidayTop.visibility = View.VISIBLE
+                    }
+                    else if(data.get(dateString)!!.size > 1){
+                        container.holidayBottom.visibility = View.VISIBLE
+                        container.holidayTop.visibility = View.VISIBLE
+                    }
+
+                }
+
+                container.container.setOnClickListener({
+                        removeBackGroun(oldCalendayView,container )
+                    if(!data.get(dateString).isNullOrEmpty()){
+                        CollapserAnim.expand(recyclerView)
+                        val adapter = CalenderHolidayAdapter(Utils.parseDate(dateString), data.get(dateString)!!, this@CalenderActivity)
+                        recyclerView.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        recyclerView.layoutManager = LinearLayoutManager(this@CalenderActivity,LinearLayoutManager.VERTICAL,false)
+                    }else{
+                        CollapserAnim.collapse(recyclerView)
+                    }
+
+                })
+
+
+                container.numHolidays.text = day.date.dayOfMonth.toString()
+                if (day.owner == DayOwner.THIS_MONTH) {
+                    container.numHolidays.setTextColor(Color.WHITE)
+                } else {
+                    container.numHolidays.setTextColor(Color.GRAY)
+                }
+            }
+
+            override fun create(view: View): DayViewContainer {
+                return DayViewContainer(view)
+            }
+
+
+        }
+
+    }
+
+    private fun removeBackGroun(oldview : DayViewContainer?, newView : DayViewContainer ){
+       if(oldview != null){
+           oldview.container.setBackgroundColor(this.resources.getColor(R.color.item_view_bg_color))
+           newView.container.setBackgroundColor(this.resources.getColor(R.color.bootstrap_brand_danger))
+           oldCalendayView = newView
+       }else{
+           newView.container.setBackgroundColor(this.resources.getColor(R.color.bootstrap_brand_danger))
+           oldCalendayView = newView
+       }
+    }
 
 }

@@ -22,9 +22,11 @@ class CalenderPresenter : Extension, CalenderContract.presenter {
       val res =  getHoliday(startDate)
         if (res != null) {
             if(res.size >= 27){
-                val listHol =  ArrayList<Holiday>()
-
-                contractview.returnedHoliday()
+                val listHol =  mutableMapOf<String, List<Holiday>>()
+                res.forEach({
+                    listHol.put(it.day!!, it.holdays)
+                })
+                contractview.returnedHoliday(listHol)
             }else{
                 contractview.showPregress()
 
@@ -36,19 +38,20 @@ class CalenderPresenter : Extension, CalenderContract.presenter {
                 getData(startDate, endDate, object :
                     SimpleUpdate<Map<String, List<Holiday>?>, String> {
                     override fun start() {
-                        d("okh", "Started")
+                       contractview.showPregress()
                     }
 
                     override fun sucsess(res: Map<String, List<Holiday>?>) {
-                        TODO("Not yet implemented")
+                        contractview.hideProgress()
+                        contractview.returnedHoliday(res as Map<String, List<Holiday>>)
                     }
 
                     override fun error(err: String) {
-                        TODO("Not yet implemented")
+                        contractview.showError(err)
                     }
 
                     override fun complete() {
-                        TODO("Not yet implemented")
+                        contractview.hideProgress()
                     }
 
                 })

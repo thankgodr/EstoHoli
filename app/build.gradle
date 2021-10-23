@@ -26,6 +26,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -57,4 +58,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "com.beardedhen:androidbootstrap:2.3.2"
     implementation "com.android.support:multidex:1.0.0"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
+    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
+
 }

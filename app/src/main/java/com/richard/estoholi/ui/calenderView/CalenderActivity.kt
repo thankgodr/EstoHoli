@@ -22,6 +22,7 @@ import com.kizitonwose.calendarview.utils.previous
 import com.richard.estoholi.R
 import com.richard.estoholi.ui.holidayList.HoldayContract
 import com.richard.estoholi.ui.holidayList.adapter.HoldayListAdapter
+import com.richard.estoholi.ui.holidayList.adapter.SingleHolidayAdapter
 import kotlinx.android.synthetic.main.calenda_view.*
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -110,12 +111,20 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
         return daysOfWeek
     }
 
-    override fun returnedHoliday() {
-        TODO("Not yet implemented")
+    override fun returnedHoliday(adapter: SingleHolidayAdapter) {
+
     }
 
     override fun getContext(): Context {
         return this
+    }
+
+    override fun showPregress() {
+        TODO("Not yet implemented")
+    }
+
+    override fun hideProgress() {
+        TODO("Not yet implemented")
     }
 
 

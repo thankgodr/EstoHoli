@@ -1,11 +1,14 @@
 package com.richard.estoholi.ui.calenderView
 
+import android.util.Log.d
 import com.richard.estoholi.HolidayAplication
 import com.richard.estoholi.models.Holiday
 import com.richard.estoholi.ui.helpers.Extension
 import com.richard.estoholi.ui.helpers.SimpleUpdate
+import com.richard.estoholi.ui.holidayList.adapter.SingleHolidayAdapter
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CalenderPresenter : Extension, CalenderContract.presenter {
 
@@ -19,6 +22,8 @@ class CalenderPresenter : Extension, CalenderContract.presenter {
       val res =  getHoliday(startDate)
         if (res != null) {
             if(res.size >= 27){
+                val listHol =  ArrayList<Holiday>()
+
                 contractview.returnedHoliday()
             }else{
                 contractview.showPregress()
@@ -31,7 +36,7 @@ class CalenderPresenter : Extension, CalenderContract.presenter {
                 getData(startDate, endDate, object :
                     SimpleUpdate<Map<String, List<Holiday>?>, String> {
                     override fun start() {
-                        TODO("Not yet implemented")
+                        d("okh", "Started")
                     }
 
                     override fun sucsess(res: Map<String, List<Holiday>?>) {

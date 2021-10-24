@@ -1,6 +1,10 @@
 package com.richard.estoholi.ui.helpers
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import com.ashokvarma.bottomnavigation.BottomNavigationBar
+import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.google.gson.Gson
 import com.richard.estoholi.HolidayAplication
 import com.richard.estoholi.R
@@ -9,11 +13,14 @@ import com.richard.estoholi.models.HolidayRealm
 import com.richard.estoholi.models.HolidayRequest
 import com.richard.estoholi.models.HolidayResponse
 import com.richard.estoholi.networking.NeworkRequest
+import com.richard.estoholi.ui.calenderView.CalenderActivity
+import com.richard.estoholi.ui.holidayList.HolidaytList
 import com.richard.estoholi.ui.holidayList.adapter.HoldayListAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.realm.RealmResults
 import io.realm.Sort
+import kotlinx.android.synthetic.main.calenda_view.*
 import java.text.SimpleDateFormat
 import java.util.*
 

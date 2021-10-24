@@ -2,16 +2,20 @@ package com.richard.estoholi.ui.calenderView
 
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log.d
 import android.util.TypedValue
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ashokvarma.bottomnavigation.BottomNavigationBar
+import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -23,8 +27,10 @@ import com.richard.estoholi.R
 import com.richard.estoholi.models.Holiday
 import com.richard.estoholi.ui.calenderView.adapters.CalenderHolidayAdapter
 import com.richard.estoholi.ui.helpers.CollapserAnim
+import com.richard.estoholi.ui.helpers.SharedActivityViews
 import com.richard.estoholi.ui.helpers.Utils
 import com.richard.estoholi.ui.holidayList.HoldayContract
+import com.richard.estoholi.ui.holidayList.HolidaytList
 import kotlinx.android.synthetic.main.calenda_view.*
 import kotlinx.android.synthetic.main.calendar_day.*
 import org.jetbrains.anko.alert
@@ -38,13 +44,16 @@ import java.time.temporal.WeekFields
 import java.util.*
 
 
-class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
+class CalenderActivity : AppCompatActivity(), CalenderContract.UI{
 
     lateinit var presenter : CalenderPresenter
+    val sharedActivityViews = SharedActivityViews()
     lateinit var progresBar: ProgressDialog
     var oldCalendayView : DayViewContainer? = null
 
     private var selectedDate: LocalDate? = null
+
+    var startDateGen = "";
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +64,7 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
         attachPresenter()
         UiSetup()
 
+        sharedActivityViews.setUpBottomBar(startDateGen, this, bottom_navigation_bar, true)
     }
 
     private fun UiSetup(){
@@ -82,7 +92,8 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
         maincalenda.monthScrollListener = { month ->
             val title = "${DateTimeFormatter.ofPattern("MMMM").format(month.yearMonth)} ${month.yearMonth.year}"
             exFiveMonthYearText.text = title
-            presenter.getHolidays("${month.yearMonth.year}-${month.month}-01")
+            startDateGen = "${month.yearMonth.year}-${month.month}-01"
+            presenter.getHolidays(startDateGen)
         }
 
 
@@ -123,6 +134,10 @@ class CalenderActivity : AppCompatActivity() , CalenderContract.UI{
         maincalenda.setup(firstMonth, lastMonth, firstDayOfWeek)
         maincalenda.scrollToMonth(currentMonth)
     }
+
+
+
+
 
     private fun attachPresenter() {
         presenter = CalenderPresenter(this)

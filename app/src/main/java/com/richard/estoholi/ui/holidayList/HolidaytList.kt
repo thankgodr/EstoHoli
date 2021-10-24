@@ -15,6 +15,7 @@ import com.beardedhen.androidbootstrap.BootstrapText
 import com.beardedhen.androidbootstrap.TypefaceProvider
 import com.richard.estoholi.R
 import com.richard.estoholi.ui.helpers.CollapserAnim
+import com.richard.estoholi.ui.helpers.SharedActivityViews
 import com.richard.estoholi.ui.helpers.Utils
 import com.richard.estoholi.ui.holidayList.adapter.HoldayListAdapter
 import io.realm.internal.Util
@@ -37,6 +38,7 @@ class HolidaytList : AppCompatActivity(), HoldayContract.UiContract, View.OnClic
         attachPresenter()
         supportActionBar!!.hide()
         setUPUI()
+
 
     }
 
@@ -81,6 +83,10 @@ class HolidaytList : AppCompatActivity(), HoldayContract.UiContract, View.OnClic
                }
             }
         })
+
+
+        //Set up Buttom bar
+        SharedActivityViews().setUpBottomBar(startDate, this, bottom_navigation_bar, false)
     }
 
 

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.richard.estoholi"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -61,6 +61,8 @@ dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
     implementation 'com.github.kizitonwose:CalendarView:1.0.4'
+    implementation 'com.github.or-dvir.EasySettings:easysettings-basic:1.1.4'
+
 
 
 

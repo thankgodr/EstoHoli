@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.beardedhen.androidbootstrap.BootstrapText
 import com.beardedhen.androidbootstrap.TypefaceProvider
 import com.richard.estoholi.R
+import com.richard.estoholi.ui.helpers.ChangeDay
 import com.richard.estoholi.ui.helpers.CollapserAnim
 import com.richard.estoholi.ui.helpers.SharedActivityViews
 import com.richard.estoholi.ui.helpers.Utils
@@ -22,6 +23,7 @@ import io.realm.internal.Util
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
 import java.util.*
 
 class HolidaytList : AppCompatActivity(), HoldayContract.UiContract, View.OnClickListener {
@@ -86,7 +88,13 @@ class HolidaytList : AppCompatActivity(), HoldayContract.UiContract, View.OnClic
 
 
         //Set up Buttom bar
-        SharedActivityViews().setUpBottomBar(startDate, this, bottom_navigation_bar, false)
+        SharedActivityViews(false).setUpBottomBar(startDate, this, bottom_navigation_bar,  object :
+            ChangeDay {
+            override fun updateNewFirstDay(week: DayOfWeek) {
+                d("okh", "Selected is ${week}")
+            }
+
+        })
     }
 
 

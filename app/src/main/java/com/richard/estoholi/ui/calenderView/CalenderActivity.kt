@@ -26,6 +26,7 @@ import com.kizitonwose.calendarview.utils.previous
 import com.richard.estoholi.R
 import com.richard.estoholi.models.Holiday
 import com.richard.estoholi.ui.calenderView.adapters.CalenderHolidayAdapter
+import com.richard.estoholi.ui.helpers.ChangeDay
 import com.richard.estoholi.ui.helpers.CollapserAnim
 import com.richard.estoholi.ui.helpers.SharedActivityViews
 import com.richard.estoholi.ui.helpers.Utils
@@ -47,7 +48,7 @@ import java.util.*
 class CalenderActivity : AppCompatActivity(), CalenderContract.UI{
 
     lateinit var presenter : CalenderPresenter
-    val sharedActivityViews = SharedActivityViews()
+    val sharedActivityViews = SharedActivityViews(true)
     lateinit var progresBar: ProgressDialog
     var oldCalendayView : DayViewContainer? = null
 
@@ -64,7 +65,13 @@ class CalenderActivity : AppCompatActivity(), CalenderContract.UI{
         attachPresenter()
         UiSetup()
 
-        sharedActivityViews.setUpBottomBar(startDateGen, this, bottom_navigation_bar, true)
+        sharedActivityViews.setUpBottomBar(startDateGen, this, bottom_navigation_bar, object :
+            ChangeDay {
+            override fun updateNewFirstDay(week: DayOfWeek) {
+                renderCalendar(week)
+            }
+
+        })
     }
 
     private fun UiSetup(){
@@ -98,22 +105,6 @@ class CalenderActivity : AppCompatActivity(), CalenderContract.UI{
 
 
 
-        maincalenda.monthHeaderBinder =  object : MonthHeaderFooterBinder<MonthViewContainer> {
-            override fun create(view: View) = MonthViewContainer(view)
-            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
-                // Setup each header day text if we have not done that already.
-                if (container.legendLayout.tag == null) {
-                    container.legendLayout.tag = month.yearMonth
-                    container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
-                        tv.text = daysOfWeekFromLocale()[index].getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
-                            .toUpperCase(Locale.ENGLISH)
-                        tv.setTextColor(resources.getColor(R.color.text_grey))
-                        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-                    }
-                    month.yearMonth
-                }
-            }
-        }
 
         exFiveNextMonthImage.setOnClickListener {
             maincalenda.findFirstVisibleMonth()?.let {
@@ -127,13 +118,41 @@ class CalenderActivity : AppCompatActivity(), CalenderContract.UI{
             }
         }
 
+        renderCalendar(DayOfWeek.SUNDAY)
+
+    }
+
+    private fun renderCalendar(dayofWeek: DayOfWeek){
+
+        maincalenda.monthHeaderBinder =  object : MonthHeaderFooterBinder<MonthViewContainer> {
+            override fun create(view: View) = MonthViewContainer(view)
+            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                // Setup each header day text if we have not done that already.
+                if (container.legendLayout.tag == null) {
+                    container.legendLayout.tag = month.yearMonth
+                    container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
+                        tv.text = daysOfWeekFromLocale(dayofWeek)[index].getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                            .toUpperCase(Locale.ENGLISH)
+                        tv.setTextColor(resources.getColor(R.color.text_grey))
+                        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                    }
+                    month.yearMonth
+                }
+            }
+        }
+
+
+
         val currentMonth = YearMonth.now()
-        val firstMonth = currentMonth.minusMonths(10)
-        val lastMonth = currentMonth.plusMonths(10)
+        val firstMonth = currentMonth.minusMonths(1000)
+        val lastMonth = currentMonth.plusMonths(1000)
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-        maincalenda.setup(firstMonth, lastMonth, firstDayOfWeek)
+        maincalenda.setup(firstMonth, lastMonth, dayofWeek)
         maincalenda.scrollToMonth(currentMonth)
     }
+
+
+
 
 
 
@@ -143,8 +162,8 @@ class CalenderActivity : AppCompatActivity(), CalenderContract.UI{
         presenter = CalenderPresenter(this)
     }
 
-    fun daysOfWeekFromLocale(): Array<DayOfWeek> {
-        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+    fun daysOfWeekFromLocale(dayofWeek : DayOfWeek = DayOfWeek.SUNDAY): Array<DayOfWeek> {
+        val firstDayOfWeek = WeekFields.of(dayofWeek, 7).firstDayOfWeek
         var daysOfWeek = DayOfWeek.values()
         // Order `daysOfWeek` array so that firstDayOfWeek is at index 0.
         // Only necessary if firstDayOfWeek != DayOfWeek.MONDAY which has ordinal 0.

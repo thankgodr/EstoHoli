@@ -2,6 +2,9 @@ package com.richard.estoholi.ui.helpers
 
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
@@ -18,11 +21,12 @@ import com.richard.estoholi.ui.holidayList.HolidaytList
 import com.richard.estoholi.ui.holidayList.adapter.HoldayListAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.realm.RealmResults
-import io.realm.Sort
+import io.realm.*
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.calenda_view.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 open class Extension(val  app : HolidayAplication) {
     protected fun getHoliday(startDate: String): RealmResults<HolidayRealm>? {
@@ -65,7 +69,8 @@ open class Extension(val  app : HolidayAplication) {
                     simpleUpdate.error(app.getString(R.string.unKnownError))
                 }
 
-                saveNewResponace(startDate,endDate,it)
+                   saveNewResponace(startDate,endDate,it)
+
             },{
                 simpleUpdate.complete()
                 if (it.message.isNullOrEmpty()) simpleUpdate.error(it.localizedMessage) else simpleUpdate.error(
@@ -75,19 +80,37 @@ open class Extension(val  app : HolidayAplication) {
     }
 
     private  fun saveNewResponace(startDate: String, endDtae: String,holidayResponse: HolidayResponse){
+
         val newMap = populateEMptyDate(startDate,endDtae, holidayResponse)
         newMap.forEach{
             if(!it.key.isNullOrEmpty()){
-                app.realm.beginTransaction();
-                val holidayRealm = app.realm.createObject(HolidayRealm::class.java, it.key)
-                holidayRealm.setDate()
-                if(!it.value.isNullOrEmpty()){
-                    it.value!!.forEach {
-                        val singleHoliday =  app.realm.copyToRealm(it)
-                        holidayRealm.holdays!!.add(singleHoliday)
+                app.realm.executeTransaction({ realm ->
+                    var holidayRealm = realm.where(HolidayRealm::class.java).equalTo("day", it.key).findFirst()
+                     if(holidayRealm == null){
+                         holidayRealm = app.realm.createObject(HolidayRealm::class.java, it.key)
+                     }
+                    holidayRealm!!.setDate()
+                    if(!it.value.isNullOrEmpty()){
+                        it.value!!.forEach {
+                            val singleHoliday =  app.realm.copyToRealm(it)
+                            holidayRealm.holdays!!.add(singleHoliday)
+                        }
+
                     }
-                }
-                app.realm.commitTransaction()
+                    realm.insertOrUpdate(holidayRealm)
+
+                })
+                /* app.realm.beginTransaction();
+                 val holidayRealm = app.realm.createObject(HolidayRealm::class.java, it.key)
+                 holidayRealm.setDate()
+                 if(!it.value.isNullOrEmpty()){
+                     it.value!!.forEach {
+                         val singleHoliday =  app.realm.copyToRealm(it)
+                         holidayRealm.holdays!!.add(singleHoliday)
+                     }
+                 }
+                 app.realm.commitTransaction()*/
+
             }
         }
     }
@@ -118,5 +141,8 @@ open class Extension(val  app : HolidayAplication) {
 
 
     }
+
+
+
 
 }
